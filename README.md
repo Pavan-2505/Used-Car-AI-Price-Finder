@@ -64,6 +64,19 @@ The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 
 ## Project Status
 
-**Current status:** Initial data loading and setup.
+### Completed
 
-Further analysis and processing will be added as the project develops.
+- Set up the Python virtual environment.
+- Loaded the `train.csv` dataset using Pandas.
+- Inspected the dataset shape: 5,847 rows and 14 columns.
+- Inspected column names and data types.
+- Checked non-null values and identified columns containing missing data.
+- Inspected the first few rows of the dataset.
+- Began understanding the meaning and structure of each column.
+- Set up the project repository on GitHub.
+
+### Current Stage
+
+The project is currently in the initial **data understanding and inspection** stage.
+
+Data cleaning, feature engineering, exploratory data analysis, statistical analysis, and machine learning have not been started yet.
