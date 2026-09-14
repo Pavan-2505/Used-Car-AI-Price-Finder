@@ -106,6 +106,42 @@ The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 - `Price` ranges from 50,055 to 2,744,280.
 - No obviously impossible numerical values were identified during the initial range check.
 
+### Categorical Value Consistency
+
+#### Dataset 1 — `train.csv`
+
+- `Fuel_Type` contains 3 categories: Diesel, Petrol, and Electric.
+- `Transmission` contains 2 categories: Manual and Automatic.
+- `Owner_Type` contains 4 categories: First, Second, Third, and Fourth & Above.
+- No obvious capitalization or spelling inconsistencies were observed in these categorical values.
+
+#### Dataset 2 — `Car Sell Dataset.csv`
+
+- `Fuel Type` contains 5 categories: CNG, Petrol, Diesel, Electric, and Hybrid.
+- `Transmission` contains 2 categories: Manual and Automatic.
+- `Owner` contains 3 categories: 1st, 2nd, and 3rd+.
+- `Accidental` contains 2 categories: No and Yes.
+- No obvious capitalization or spelling inconsistencies were observed in these categorical values.
+
+#### Geographical Values
+
+- Dataset 1 contains 11 unique locations: Pune, Chennai, Coimbatore, Jaipur, Mumbai, Kochi, Kolkata, Delhi, Bangalore, Hyderabad, and Ahmedabad.
+- Dataset 2 contains 27 unique state/region categories.
+- No obvious spelling or capitalization inconsistencies were observed in the geographical values during the initial inspection.
+- Dataset 2 includes broader categories such as `North East` and `Other UTs`, which will be retained for further investigation rather than being assumed to be invalid.
+
+### Text and Unit Consistency
+
+#### Dataset 1 — `train.csv`
+
+- `Mileage`, `Engine`, `Power`, and `New_Price` are stored as text values containing numerical information and units.
+- `Mileage` contains 5,842 values reported in `kmpl` and 3 values reported in `km/kg`.
+- There are 2 missing values in `Mileage`.
+- The three `km/kg` mileage records require further investigation before deciding how they should be handled.
+- `Engine` values are represented using `CC`.
+- `Power` values are represented using `bhp`.
+- `New_Price` values are represented using `Lakh`.
+
 ## Project Status
 
 ### Completed
