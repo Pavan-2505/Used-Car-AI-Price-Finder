@@ -137,7 +137,9 @@ The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 - `Mileage`, `Engine`, `Power`, and `New_Price` are stored as text values containing numerical information and units.
 - `Mileage` contains 5,842 values reported in `kmpl` and 3 values reported in `km/kg`.
 - There are 2 missing values in `Mileage`.
-- The three `km/kg` mileage records require further investigation before deciding how they should be handled.
+- Three `Mileage` records are reported in `km/kg`.
+- These three records correspond to Petrol/Diesel vehicles, making their `km/kg` unit potentially inconsistent with their fuel type.
+- These records are being investigated before deciding whether the unit labels represent data-entry errors or require another treatment.
 - `Engine` values are represented using `CC`.
 - `Power` values are represented using `bhp`.
 - `New_Price` values are represented using `Lakh`.
