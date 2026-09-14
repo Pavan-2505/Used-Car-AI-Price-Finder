@@ -68,15 +68,37 @@ The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 
 - Set up the Python virtual environment.
 - Loaded the `train.csv` dataset using Pandas.
-- Inspected the dataset shape: 5,847 rows and 14 columns.
-- Inspected column names and data types.
-- Checked non-null values and identified columns containing missing data.
-- Inspected the first few rows of the dataset.
-- Began understanding the meaning and structure of each column.
-- Set up the project repository on GitHub.
+- Loaded the `Car Sell Dataset.csv` dataset using Pandas.
+- Inspected the shape, columns, data types, and initial records of both datasets.
+- Created an initial understanding of the variables in both datasets.
+- Checked missing values in both datasets.
+- Checked for duplicate rows in both datasets.
+- Performed an initial range check on important numerical variables.
+- Identified potential extreme values in `Kilometers_Driven` in Dataset 1.
+
+### Initial Findings
+
+#### Dataset 1 — `train.csv`
+
+- Contains 5,847 rows and 14 columns.
+- Missing values were found in `Mileage`, `Engine`, `Power`, `Seats`, and `New_Price`.
+- `New_Price` has the highest amount of missing data, with approximately 86.06% of its values missing.
+- No exact duplicate rows were found.
+- `Kilometers_Driven` contains several unusually high values.
+- The maximum `Kilometers_Driven` value is 6,500,000 km, which requires further investigation.
+- `Engine`, `Power`, `Mileage`, and `New_Price` contain values stored as text along with units or other characters.
+
+#### Dataset 2 — `Car Sell Dataset.csv`
+
+- Contains 140,904 rows and 12 columns.
+- No missing values were found in the initial analysis.
+- No exact duplicate rows were found.
+- The initial numerical range checks did not identify any obviously impossible values.
 
 ### Current Stage
 
-The project is currently in the initial **data understanding and inspection** stage.
+The project is currently in the **data understanding and data-quality audit** stage.
 
-Data cleaning, feature engineering, exploratory data analysis, statistical analysis, and machine learning have not been started yet.
+The identified missing values, extreme values, and text-based numerical fields will be investigated before making any data-cleaning decisions.
+
+No data has been removed or modified based on these findings yet.
