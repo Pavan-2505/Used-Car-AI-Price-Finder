@@ -62,6 +62,50 @@ The project is currently working with the `train.csv` file.
 
 The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 
+## Data Quality Audit
+
+### Missing Values
+
+#### Dataset 1 — `train.csv`
+
+- `Mileage`: 2 missing values
+- `Engine`: 36 missing values
+- `Power`: 36 missing values
+- `Seats`: 38 missing values
+- `New_Price`: 5,032 missing values (86.06%)
+- `Price`: No missing values
+
+#### Dataset 2 — `Car Sell Dataset.csv`
+
+- No missing values were found in any column.
+
+### Duplicate Rows
+
+- Dataset 1: 0 duplicate rows
+- Dataset 2: 0 duplicate rows
+
+### Numerical Range and Extreme Value Analysis
+
+#### Dataset 1 — `train.csv`
+
+- `Year` ranges from 1998 to 2019.
+- `Seats` ranges from 2 to 10.
+- `Price` ranges from 0.44 to 160.
+- `Kilometers_Driven` ranges from 171 to 6,500,000 km.
+- 28 records have more than 200,000 km driven.
+- 7 records have more than 300,000 km driven.
+- 4 records have more than 500,000 km driven.
+- 1 record has more than 1,000,000 km driven.
+- The median `Kilometers_Driven` is 52,576 km, while the maximum is 6,500,000 km.
+- The 6,500,000 km observation is considered a potential anomaly and requires further investigation before deciding how it should be handled.
+
+#### Dataset 2 — `Car Sell Dataset.csv`
+
+- `Year` ranges from 2000 to 2023.
+- `Kilometers` ranges from 10,000 to 179,998 km.
+- `Price` ranges from 50,055 to 2,744,280.
+- No obviously impossible numerical values were identified during the initial range check.
+
 ## Project Status
 
 ### Completed
