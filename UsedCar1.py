@@ -124,3 +124,48 @@ print(df1[df1['Mileage'].str.contains('km/kg', na=False)][['Name', 'Fuel_Type', 
 print("\n========== FULL DETAILS OF KM/KG RECORDS ==========")
 print(df1[df1['Mileage'].str.contains('km/kg', na=False)].to_string())
 
+print("\n========== Power Unit Check ==========")
+print(df1['Power'].dropna().str.extract(r'([A-Za-z]+)',expand=False).value_counts())
+
+print("\n========== Power Value Range =========")
+power_numeric=pd.to_numeric(df1['Power'].str.replace('bhp','',regex=False), errors='coerce')
+print(f"Maximum Power: {power_numeric.max()}")
+print(f"Minimum Power: {power_numeric.min()}")
+
+print("\n========== POWER SUMMARY ==========")
+print(power_numeric.describe())
+
+print("\n========== HIGHEST POWER CARS ==========")
+print(df1.assign(Power_Numeric=power_numeric)[['Name', 'Year', 'Power', 'Power_Numeric']].sort_values('Power_Numeric', ascending=False).head(10))
+
+df1['Power_Clean']=pd.to_numeric(df1['Power'].str.replace('bhp','',regex=False),errors='coerce')
+
+print("\n========== CLEANED POWER ==========")
+print(df1[['Power', 'Power_Clean']].head(10))
+print("\nData type:")
+print(df1['Power_Clean'].dtype)
+print("\nMissing values:")
+print(df1['Power_Clean'].isnull().sum())
+
+print("\n========== Engine Unit Check ==========")
+print(df1['Engine'].dropna().str.extract(r'([A-Za-z]+)',expand=False).value_counts())
+
+print("\n========== Engine Value Range =========")
+engine_numeric=pd.to_numeric(df1['Engine'].str.replace('CC','',regex=False), errors='coerce')
+print(f"Maximum Engine: {engine_numeric.max()}")
+print(f"Minimum Engine: {engine_numeric.min()}")
+
+print("\n========== ENGINE SUMMARY ==========")
+print(engine_numeric.describe())
+
+print("\n========== HIGHEST ENGINE CARS ==========")
+print(df1.assign(Engine_Numeric=engine_numeric)[['Name', 'Year', 'Engine', 'Engine_Numeric']].sort_values('Engine_Numeric', ascending=False).head(10))
+
+df1['Engine_Clean'] = pd.to_numeric(df1['Engine'].str.replace(' CC', '', regex=False),errors='coerce')
+
+print("\n========== CLEANED ENGINE ==========")
+print(df1[['Engine', 'Engine_Clean']].head(10))
+print("\nData type:")
+print(df1['Engine_Clean'].dtype)
+print("\nMissing values:")
+print(df1['Engine_Clean'].isnull().sum())
