@@ -139,9 +139,18 @@ The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 - There are 2 missing values in `Mileage`.
 - The three `km/kg` mileage records correspond to Petrol/Diesel vehicles, making their unit potentially inconsistent with their fuel type. These records require further investigation before deciding how they should be handled.
 - `Engine` values are represented using `CC`.
-- `Power` has 5,811 non-missing values, and all of them use the `bhp` unit.
 - `Power` has 36 missing values.
 - `New_Price` values are represented using `Lakh`.
+- `Power` contains 5,811 non-missing values, all reported in `bhp`.
+- `Power` ranges from 34.2 bhp to 560 bhp.
+- `Power` was investigated for unit consistency and extreme values. All non-missing values use `bhp`, and the high-end values correspond to high-performance vehicles.
+- The median Power is 98.6 bhp.
+- The highest Power values correspond to high-performance and luxury vehicles, so no clearly invalid Power values were identified during the initial investigation.
+- A cleaned numerical version of `Power` will be created while preserving the original raw column.
+- `Engine` has 5,811 non-missing values, and all of them use the `CC` unit.
+- `Engine` ranges from 72 CC to 5,998 CC, with a median of 1,497 CC.
+- The highest Engine values correspond to large-engine luxury and performance vehicles, so no clearly invalid Engine values were identified during the initial investigation.
+- A cleaned numerical version of `Engine` has been created while preserving the original raw column.
 
 ## Project Status
 
