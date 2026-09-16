@@ -135,22 +135,45 @@ The dataset has been loaded successfully into a Pandas DataFrame named `df1`.
 #### Dataset 1 — `train.csv`
 
 - `Mileage`, `Engine`, `Power`, and `New_Price` are stored as text values containing numerical information and units.
+
+##### Mileage
+
 - `Mileage` contains 5,842 values reported in `kmpl` and 3 values reported in `km/kg`.
 - There are 2 missing values in `Mileage`.
-- The three `km/kg` mileage records correspond to Petrol/Diesel vehicles, making their unit potentially inconsistent with their fuel type. These records require further investigation before deciding how they should be handled.
-- `Engine` values are represented using `CC`.
-- `Power` has 36 missing values.
-- `New_Price` values are represented using `Lakh`.
-- `Power` contains 5,811 non-missing values, all reported in `bhp`.
-- `Power` ranges from 34.2 bhp to 560 bhp.
-- `Power` was investigated for unit consistency and extreme values. All non-missing values use `bhp`, and the high-end values correspond to high-performance vehicles.
-- The median Power is 98.6 bhp.
-- The highest Power values correspond to high-performance and luxury vehicles, so no clearly invalid Power values were identified during the initial investigation.
-- A cleaned numerical version of `Power` will be created while preserving the original raw column.
+- The three `km/kg` records correspond to Petrol/Diesel vehicles, making their unit potentially inconsistent with their fuel type.
+- These three records require further investigation before deciding how they should be handled.
+
+##### Engine
+
 - `Engine` has 5,811 non-missing values, and all of them use the `CC` unit.
 - `Engine` ranges from 72 CC to 5,998 CC, with a median of 1,497 CC.
-- The highest Engine values correspond to large-engine luxury and performance vehicles, so no clearly invalid Engine values were identified during the initial investigation.
-- A cleaned numerical version of `Engine` has been created while preserving the original raw column.
+- The highest Engine values correspond to large-engine luxury and performance vehicles.
+- No clearly invalid Engine values were identified during the initial investigation.
+- A cleaned numerical version, `Engine_Clean`, has been created while preserving the original `Engine` column.
+
+##### Power
+
+- `Power` has 5,811 non-missing values, and all of them use the `bhp` unit.
+- `Power` ranges from 34.2 bhp to 560 bhp, with a median of 98.6 bhp.
+- The highest Power values correspond to high-performance and luxury vehicles.
+- No clearly invalid Power values were identified during the initial investigation.
+- A cleaned numerical version, `Power_Clean`, has been created while preserving the original `Power` column.
+
+##### New_Price
+
+- `New_Price` contains 798 values reported in `Lakh` and 17 values reported in `Cr`.
+- The `Cr` values were identified as Crore and converted to `Lakh` for consistent numerical representation.
+- `New_Price` contains 5,032 missing values, representing approximately 86.06% of the dataset.
+- A cleaned numerical version, `New_Price_Clean`, has been created with all available values standardized to `Lakh`.
+- Missing `New_Price` values have been preserved as missing and will be considered separately during further analysis.
+
+### New_Price Missingness Analysis
+
+- `New_Price` contains 5,032 missing values out of 5,847 records, representing approximately 86.06% of the dataset.
+- Missingness is not evenly distributed across vehicle years.
+- Older vehicle years generally have very low `New_Price` availability, while newer vehicle years have a higher proportion of recorded values.
+- `New_Price` availability increases from approximately 4.85% in 2010 to 57.43% in 2019.
+- The missingness pattern will be considered before deciding whether `New_Price` should be retained, imputed, or excluded during later modeling stages.
 
 ## Project Status
 

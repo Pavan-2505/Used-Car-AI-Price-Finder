@@ -169,3 +169,49 @@ print("\nData type:")
 print(df1['Engine_Clean'].dtype)
 print("\nMissing values:")
 print(df1['Engine_Clean'].isnull().sum())
+
+print("\n========== New Price Unit Check ==========")
+print(df1['New_Price'].dropna().str.extract(r'([A-Za-z]+)',expand=False).value_counts())
+
+print("\n========== CRORE NEW PRICE VALUES=========")
+print(df1[df1['New_Price'].str.contains('Cr', na=False)][['Name', 'Year', 'New_Price', 'Price']])
+
+print("\n========== NEW PRICE BY UNIT ==========")
+
+print("\nLakh values:")
+print(pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Lakh', na=False),'New_Price'].str.replace(' Lakh', '', regex=False),errors='coerce').describe())
+
+print("\nCrore values:")
+print(pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Cr', na=False),'New_Price'].str.replace(' Cr', '', regex=False),errors='coerce').describe())
+
+print("\n========== NEW PRICE AND PRICE COMPARISON ==========")
+
+print(df1[['Name', 'Year', 'New_Price', 'Price']].dropna(subset=['New_Price']).head(20))
+
+print("\n========== CLEANING NEW PRICE ==========")
+new_price_clean=df1['New_Price'].copy()
+new_price_clean=new_price_clean.str.replace(' Lakh','',regex=False)
+new_price_clean=new_price_clean.str.replace(' Cr','',regex=False)
+new_price_clean=pd.to_numeric(new_price_clean,errors='coerce')
+new_price_clean[df1['New_Price'].str.contains('Cr', na=False)]*=100
+df1['New_Price_Clean']=new_price_clean
+
+print("\n========== CLEANED NEW PRICE ==========")
+print(df1[['New_Price', 'New_Price_Clean']].dropna(subset=['New_Price']).head(20))
+print("\nData type:")
+print(df1['New_Price_Clean'].dtype)
+print("\nMissing values:")
+print(df1['New_Price_Clean'].isnull().sum())
+
+print("\n========== CRORE CONVERSION CHECK ==========")
+print(df1[df1['New_Price'].str.contains('Cr', na=False)][['Name', 'New_Price', 'New_Price_Clean']])
+
+print("\n========== NEW PRICE MISSINGNESS BY YEAR ==========")
+print(df1.groupby('Year')['New_Price'].apply(lambda x: x.isnull().sum()))
+
+print("\n========== NEW PRICE AVAILABILITY BY YEAR ==========")
+
+new_price_year = df1.groupby('Year')['New_Price'].agg(Total_Cars='size',Available='count')
+new_price_year['Missing'] = (new_price_year['Total_Cars'] -new_price_year['Available'])
+new_price_year['Available_Percent'] = (new_price_year['Available'] /new_price_year['Total_Cars'] * 100)
+print(new_price_year)
