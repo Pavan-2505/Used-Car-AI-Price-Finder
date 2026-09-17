@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
+from scipy.stats import mannwhitneyu
 
 warnings.filterwarnings('ignore')
 
@@ -163,4 +164,229 @@ print("\nCleaned Mileage:")
 print(df1[['Mileage', 'Mileage_Clean']].head(20))
 print(df1['Mileage_Clean'].dtype)
 print(df1['Mileage_Clean'].isna().sum())
+
+df1['Car_Age'] = 2019 - df1['Year']
+
+print("\nCar Age:")
+print(df1[['Year', 'Car_Age']].head(10))
+print(df1['Car_Age'].describe())
+
+df1['Brand'] = df1['Name'].str.split().str[0]
+
+df1['Model'] = df1['Name'].str.split().str[1]
+
+df1['Km_Per_Year'] = df1['Kilometers_Driven'] / (df1['Car_Age'] + 1)
+
+print("\nFeature extraction:")
+print(df1[['Name', 'Brand', 'Model', 'Year', 'Car_Age','Kilometers_Driven', 'Km_Per_Year','Engine_Clean', 'Power_Clean','Mileage_Clean']].head(10))
+
+print("\nBrands:")
+print(df1['Brand'].nunique())
+
+print("\nModels:")
+print(df1['Model'].nunique())
+
+print("\nKm per year:")
+print(df1['Km_Per_Year'].describe())
+
+print("\nEDA")
+
+plt.figure(figsize=(8, 5))
+sns.histplot(df1['Price'], bins=40, kde=True)
+plt.title('Distribution of Used Car Prices')
+plt.xlabel('Price (Lakh)')
+plt.ylabel('Number of Cars')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df1, x='Car_Age', y='Price', alpha=0.5)
+plt.title('Price vs Car Age')
+plt.xlabel('Car Age')
+plt.ylabel('Price (Lakh)')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df1, x='Kilometers_Driven', y='Price', alpha=0.5)
+plt.title('Price vs Kilometers Driven')
+plt.xlabel('Kilometers Driven')
+plt.ylabel('Price (Lakh)')
+plt.show()
+
+
+brand_price = df1.groupby('Brand')['Price'].median().sort_values(ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=brand_price.values, y=brand_price.index)
+plt.title('Median Price by Brand')
+plt.xlabel('Median Price (Lakh)')
+plt.ylabel('Brand')
+plt.show()
+
+
+fuel_price = df1.groupby('Fuel_Type')['Price'].median().sort_values(ascending=False)
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x=fuel_price.index, y=fuel_price.values)
+plt.title('Median Price by Fuel Type')
+plt.xlabel('Fuel Type')
+plt.ylabel('Median Price (Lakh)')
+plt.show()
+
+
+transmission_price = df1.groupby('Transmission')['Price'].median()
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x=transmission_price.index, y=transmission_price.values)
+plt.title('Median Price by Transmission')
+plt.xlabel('Transmission')
+plt.ylabel('Median Price (Lakh)')
+plt.show()
+
+
+owner_price = df1.groupby('Owner_Type')['Price'].median()
+
+plt.figure(figsize=(8, 5))
+sns.barplot(x=owner_price.index, y=owner_price.values)
+plt.title('Median Price by Owner Type')
+plt.xlabel('Owner Type')
+plt.ylabel('Median Price (Lakh)')
+plt.show()
+
+
+location_price = df1.groupby('Location')['Price'].median().sort_values(ascending=False)
+
+plt.figure(figsize=(10, 6))
+sns.barplot(x=location_price.values, y=location_price.index)
+plt.title('Median Price by Location')
+plt.xlabel('Median Price (Lakh)')
+plt.ylabel('Location')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df1, x='Mileage_Clean', y='Price', alpha=0.5)
+plt.title('Price vs Mileage')
+plt.xlabel('Mileage')
+plt.ylabel('Price (Lakh)')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df1, x='Power_Clean', y='Price', alpha=0.5)
+plt.title('Price vs Power')
+plt.xlabel('Power (bhp)')
+plt.ylabel('Price (Lakh)')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.scatterplot(data=df1, x='Engine_Clean', y='Price', alpha=0.5)
+plt.title('Price vs Engine Size')
+plt.xlabel('Engine (CC)')
+plt.ylabel('Price (Lakh)')
+plt.show()
+
+
+year_price = df1.groupby('Year')['Price'].median()
+
+plt.figure(figsize=(10, 5))
+sns.lineplot(x=year_price.index, y=year_price.values, marker='o')
+plt.title('Median Price by Year')
+plt.xlabel('Year')
+plt.ylabel('Median Price (Lakh)')
+plt.show()
+
+print("\nPrice statistics:")
+print(df1['Price'].describe())
+
+print("\nCar age statistics:")
+print(df1['Car_Age'].describe())
+
+print("\nKilometers statistics:")
+print(df1['Kilometers_Driven'].describe())
+
+print("\nMileage statistics:")
+print(df1['Mileage_Clean'].describe())
+
+print("\nEngine statistics:")
+print(df1['Engine_Clean'].describe())
+
+print("\nPower statistics:")
+print(df1['Power_Clean'].describe())
+
+print("\nCorrelation with Price:")
+print(df1[['Price', 'Car_Age', 'Kilometers_Driven','Mileage_Clean', 'Engine_Clean','Power_Clean']].corr()['Price'].sort_values(ascending=False))
+
+print("\nOutlier analysis")
+
+columns = [
+    'Price',
+    'Kilometers_Driven',
+    'Engine_Clean',
+    'Power_Clean',
+    'Mileage_Clean'
+]
+
+for col in columns:
+    q1 = df1[col].quantile(0.25)
+    q3 = df1[col].quantile(0.75)
+    iqr = q3 - q1
+
+    lower = q1 - 1.5 * iqr
+    upper = q3 + 1.5 * iqr
+
+    outliers = df1[(df1[col] < lower) | (df1[col] > upper)]
+
+    print("\n", col)
+    print("Lower limit:", lower)
+    print("Upper limit:", upper)
+    print("Number of outliers:", len(outliers))
+
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(y=df1['Price'])
+plt.title('Price Outliers')
+plt.ylabel('Price (Lakh)')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(y=df1['Kilometers_Driven'])
+plt.title('Kilometers Driven Outliers')
+plt.ylabel('Kilometers Driven')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(y=df1['Engine_Clean'])
+plt.title('Engine Outliers')
+plt.ylabel('Engine (CC)')
+plt.show()
+
+
+plt.figure(figsize=(8, 5))
+sns.boxplot(y=df1['Power_Clean'])
+plt.title('Power Outliers')
+plt.ylabel('Power (bhp)')
+plt.show()
+
+print("\nTransmission price comparison")
+
+automatic = df1[df1['Transmission'] == 'Automatic']['Price']
+manual = df1[df1['Transmission'] == 'Manual']['Price']
+
+print("Automatic median:", automatic.median())
+print("Manual median:", manual.median())
+
+stat, p_value = mannwhitneyu(automatic,manual,alternative='two-sided')
+
+print("U statistic:", stat)
+print("p-value:", p_value)
+
+if p_value < 0.05:
+    print("The difference is statistically significant.")
+else:
+    print("The difference is not statistically significant.")
 
