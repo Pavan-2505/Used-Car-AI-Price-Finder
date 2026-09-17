@@ -6,212 +6,161 @@ import warnings
 
 warnings.filterwarnings('ignore')
 
-#Load Datasets
 df1 = pd.read_csv('train.csv')
-df2=pd.read_csv('Car Sell Dataset.csv')
+df2 = pd.read_csv('Car Sell Dataset.csv')
 
 pd.set_option('display.max_columns', None)
 
-#Dataset 1
-print("---------FIRST DATASET---------")
-print("The Dataset contains", df1.shape[0], "rows and", df1.shape[1], "columns")
+print("Dataset 1:", df1.shape)
 df1.info()
 print(df1.head())
 
-#Dataset 2
-print("\n---------SECOND DATASET---------")
-print(f"The Dataset contains {df2.shape[0]} rows and {df2.shape[1]} columns")
+print("\nDataset 2:", df2.shape)
 df2.info()
 print(df2.head())
 
-print("\n---------MISSING VALUES:DATASET 1---------")
-missing_df1=df1.isnull().sum()
+missing_df1 = df1.isnull().sum()
+print("\nMissing values in Dataset 1:")
 print(missing_df1)
-missing_percentage_df1=(missing_df1/len(df1))*100
-print(missing_percentage_df1)
+print((missing_df1 / len(df1)) * 100)
 
-print("\n---------MISSING VALUES: DATASET 2---------")
-missing_df2=df2.isnull().sum()
+missing_df2 = df2.isnull().sum()
+print("\nMissing values in Dataset 2:")
 print(missing_df2)
-missing_percentage_df2=(missing_df2/len(df2))*100
-print(missing_percentage_df2)
+print((missing_df2 / len(df2)) * 100)
 
-print("\n========== INITIAL OBSERVATIONS ==========")
+print("\nDuplicate rows:")
+print("Dataset 1:", df1.duplicated().sum())
+print("Dataset 2:", df2.duplicated().sum())
 
-print("Dataset 1 has missing values in Mileage, Engine, Power, Seats and New_Price.")
-print("New_Price has the highest amount of missing data in Dataset 1.")
-print("Dataset 2 currently has no missing values.")
+print("\nDataset 1 ranges:")
+print("Year:", df1['Year'].min(), "-", df1['Year'].max())
+print("Kilometers:", df1['Kilometers_Driven'].min(), "-", df1['Kilometers_Driven'].max())
+print("Seats:", df1['Seats'].min(), "-", df1['Seats'].max())
+print("Price:", df1['Price'].min(), "-", df1['Price'].max())
 
-print("\n========== DUPLICATES: DATASET 1 ==========")
-print("Number of duplicate rows in Dataset 1:",df1.duplicated().sum())
+print("\nDataset 2 ranges:")
+print("Year:", df2['Year'].min(), "-", df2['Year'].max())
+print("Kilometers:", df2['Kilometers'].min(), "-", df2['Kilometers'].max())
+print("Price:", df2['Price'].min(), "-", df2['Price'].max())
 
-print("\n========== DUPLICATES: DATASET 2 ==========")
-print("Number of duplicate rows in Dataset 2:",df2.duplicated().sum())
+print("\nHighest kilometers driven:")
+print(df1[['Name', 'Year', 'Kilometers_Driven', 'Price']].sort_values('Kilometers_Driven', ascending=False).head(10))
 
-print("\n========== POSSIBLE INVALID VALUES: DATASET 1=========")
-print(f"Year Range: {df1['Year'].min()} to {df1['Year'].max()}")
-print(f"Kilometers driven range: {df1['Kilometers_Driven'].min()} to {df1['Kilometers_Driven'].max()}")
-print(f"Seats Range: {df1['Seats'].min()} to {df1['Seats'].max()}")
-print(f"Price Range: {df1['Price'].min()} to {df1['Price'].max()}")
-
-print("\n========== POSSIBLE INVALID VALUES: DATASET 2========")
-print(f"Year Range: {df2['Year'].min()} to {df2['Year'].max()}")
-print(f"Kilometers driven range: {df2['Kilometers'].min()} to {df2['Kilometers'].max()}")
-print(f"Price Range: {df2['Price'].min()} to {df2['Price'].max()}")
-
-print(df1[df1['Kilometers_Driven']==df1['Kilometers_Driven'].max()])
-print(df1[['Name', 'Year', 'Kilometers_Driven', 'Price']]
-      .sort_values('Kilometers_Driven', ascending=False)
-      .head(10))
-
-print("\n========== EXTREME KILOMETER VALUES: DATASET 1 ==========")
-print("Above 200,000 km:",(df1['Kilometers_Driven'] > 200000).sum())
-print("Above 300,000 km:",(df1['Kilometers_Driven'] > 300000).sum())
-print("Above 500,000 km:",(df1['Kilometers_Driven'] > 500000).sum())
-print("Above 1,000,000 km:",(df1['Kilometers_Driven'] > 1000000).sum())
-
-print("\n KILOMOETER SUMMARY")
+print("\nExtreme kilometer values:")
+print("Above 200000:", (df1['Kilometers_Driven'] > 200000).sum())
+print("Above 300000:", (df1['Kilometers_Driven'] > 300000).sum())
+print("Above 500000:", (df1['Kilometers_Driven'] > 500000).sum())
+print("Above 1000000:", (df1['Kilometers_Driven'] > 1000000).sum())
 print(df1['Kilometers_Driven'].describe())
 
-print("\n========== UNIQUE VALUES: DATASET 1 ==========")
+print("\nDataset 1:")
+print("Fuel:", df1['Fuel_Type'].unique())
+print("Transmission:", df1['Transmission'].unique())
+print("Owner:", df1['Owner_Type'].unique())
+print("Locations:", df1['Location'].unique())
 
-print("\nFuel Type:")
-print(df1['Fuel_Type'].unique())
+print("\nDataset 2:")
+print("Fuel:", df2['Fuel Type'].unique())
+print("Transmission:", df2['Transmission'].unique())
+print("Owner:", df2['Owner'].unique())
+print("Accidental:", df2['Accidental'].unique())
+print("States:", df2['State'].unique())
 
-print("\nTransmission:")
-print(df1['Transmission'].unique())
-
-print("\nOwner Type:")
-print(df1['Owner_Type'].unique())
-
-print("\n========== UNIQUE VALUES: DATASET 2=========")
-print(f"Fuel Type: {df2['Fuel Type'].unique()}")
-print(f"Transmission: {df2['Transmission'].unique()}")
-print(f"Owner: {df2['Owner'].unique()}")
-print(f"Accidental: {df2['Accidental'].unique()}")
-
-print("\n========== LOCATION VALUES: DATASET 1 ==========")
-print(f"Number of unique locations: {df1['Location'].nunique()}")
-print(df1['Location'].unique())
-
-print("\n========== STATE VALUES: DATASET 2 ==========")
-print(f"Number of unique states: {df2['State'].nunique()}")
-print(df2['State'].unique())
-
-print("\n========== TEXT AND UNIT INSPECTION: DATASET 1 ==========")
-print("\nMileage examples:")
+print("\nMileage:")
 print(df1['Mileage'].dropna().head(10).to_list())
-print("\nEngine examples:")
-print(df1['Engine'].dropna().head(10).to_list())
-print("\nPower examples:")
-print(df1['Power'].dropna().head(10).to_list())
-print("\nNew Price examples:")
-print(df1['New_Price'].dropna().head(10).to_list())
-
-print("\n========== MILEAGE UNIT COUNTS ==========")
 print(df1['Mileage'].dropna().str.extract(r'(kmpl|km/kg)', expand=False).value_counts())
+print(df1[df1['Mileage'].str.contains('km/kg', na=False)][['Name', 'Year', 'Fuel_Type', 'Mileage', 'Price']])
 
-print("\n========== KM/KG MILEAGE VALUES ==========")
-print(df1[df1['Mileage'].str.contains('km/kg', na=False)]['Mileage'].unique())
+print("\nEngine:")
+print(df1['Engine'].dropna().head(10).to_list())
+print(df1['Engine'].dropna().str.extract(r'([A-Za-z]+)', expand=False).value_counts())
 
-print("\n========== MILEAGE UNIQUE UNITS ==========")
+engine_numeric = pd.to_numeric(df1['Engine'].str.replace('CC', '', regex=False),errors='coerce')
 
-print(df1['Mileage'].dropna().str.extract(r'([A-Za-z/]+)', expand=False).value_counts())
-
-print("\n========== KM/KG CARS ==========")
-print(df1[df1['Mileage'].str.contains('km/kg', na=False)][['Name', 'Fuel_Type', 'Mileage']])
-
-print("\n========== FULL DETAILS OF KM/KG RECORDS ==========")
-print(df1[df1['Mileage'].str.contains('km/kg', na=False)].to_string())
-
-print("\n========== Power Unit Check ==========")
-print(df1['Power'].dropna().str.extract(r'([A-Za-z]+)',expand=False).value_counts())
-
-print("\n========== Power Value Range =========")
-power_numeric=pd.to_numeric(df1['Power'].str.replace('bhp','',regex=False), errors='coerce')
-print(f"Maximum Power: {power_numeric.max()}")
-print(f"Minimum Power: {power_numeric.min()}")
-
-print("\n========== POWER SUMMARY ==========")
-print(power_numeric.describe())
-
-print("\n========== HIGHEST POWER CARS ==========")
-print(df1.assign(Power_Numeric=power_numeric)[['Name', 'Year', 'Power', 'Power_Numeric']].sort_values('Power_Numeric', ascending=False).head(10))
-
-df1['Power_Clean']=pd.to_numeric(df1['Power'].str.replace('bhp','',regex=False),errors='coerce')
-
-print("\n========== CLEANED POWER ==========")
-print(df1[['Power', 'Power_Clean']].head(10))
-print("\nData type:")
-print(df1['Power_Clean'].dtype)
-print("\nMissing values:")
-print(df1['Power_Clean'].isnull().sum())
-
-print("\n========== Engine Unit Check ==========")
-print(df1['Engine'].dropna().str.extract(r'([A-Za-z]+)',expand=False).value_counts())
-
-print("\n========== Engine Value Range =========")
-engine_numeric=pd.to_numeric(df1['Engine'].str.replace('CC','',regex=False), errors='coerce')
-print(f"Maximum Engine: {engine_numeric.max()}")
-print(f"Minimum Engine: {engine_numeric.min()}")
-
-print("\n========== ENGINE SUMMARY ==========")
 print(engine_numeric.describe())
 
-print("\n========== HIGHEST ENGINE CARS ==========")
 print(df1.assign(Engine_Numeric=engine_numeric)[['Name', 'Year', 'Engine', 'Engine_Numeric']].sort_values('Engine_Numeric', ascending=False).head(10))
 
 df1['Engine_Clean'] = pd.to_numeric(df1['Engine'].str.replace(' CC', '', regex=False),errors='coerce')
 
-print("\n========== CLEANED ENGINE ==========")
 print(df1[['Engine', 'Engine_Clean']].head(10))
-print("\nData type:")
 print(df1['Engine_Clean'].dtype)
-print("\nMissing values:")
 print(df1['Engine_Clean'].isnull().sum())
 
-print("\n========== New Price Unit Check ==========")
-print(df1['New_Price'].dropna().str.extract(r'([A-Za-z]+)',expand=False).value_counts())
+print("\nPower:")
+print(df1['Power'].dropna().str.extract(r'([A-Za-z]+)', expand=False).value_counts())
 
-print("\n========== CRORE NEW PRICE VALUES=========")
+power_numeric = pd.to_numeric(df1['Power'].str.replace('bhp', '', regex=False),errors='coerce')
+
+print(power_numeric.describe())
+
+print(df1.assign(Power_Numeric=power_numeric)[['Name', 'Year', 'Power', 'Power_Numeric']].sort_values('Power_Numeric', ascending=False).head(10))
+
+df1['Power_Clean'] = pd.to_numeric(df1['Power'].str.replace('bhp', '', regex=False),errors='coerce')
+
+print(df1[['Power', 'Power_Clean']].head(10))
+print(df1['Power_Clean'].dtype)
+print(df1['Power_Clean'].isnull().sum())
+
+print("\nNew Price:")
+print(df1['New_Price'].dropna().str.extract(r'([A-Za-z]+)', expand=False).value_counts())
+
 print(df1[df1['New_Price'].str.contains('Cr', na=False)][['Name', 'Year', 'New_Price', 'Price']])
 
-print("\n========== NEW PRICE BY UNIT ==========")
+lakh = pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Lakh', na=False),'New_Price'].str.replace(' Lakh', '', regex=False),errors='coerce')
 
-print("\nLakh values:")
-print(pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Lakh', na=False),'New_Price'].str.replace(' Lakh', '', regex=False),errors='coerce').describe())
+crore = pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Cr', na=False),'New_Price'].str.replace(' Cr', '', regex=False),errors='coerce')
 
-print("\nCrore values:")
-print(pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Cr', na=False),'New_Price'].str.replace(' Cr', '', regex=False),errors='coerce').describe())
+print("\nLakh:")
+print(lakh.describe())
 
-print("\n========== NEW PRICE AND PRICE COMPARISON ==========")
+print("\nCrore:")
+print(crore.describe())
 
+print("\nNew Price and Price:")
 print(df1[['Name', 'Year', 'New_Price', 'Price']].dropna(subset=['New_Price']).head(20))
 
-print("\n========== CLEANING NEW PRICE ==========")
-new_price_clean=df1['New_Price'].copy()
-new_price_clean=new_price_clean.str.replace(' Lakh','',regex=False)
-new_price_clean=new_price_clean.str.replace(' Cr','',regex=False)
-new_price_clean=pd.to_numeric(new_price_clean,errors='coerce')
-new_price_clean[df1['New_Price'].str.contains('Cr', na=False)]*=100
-df1['New_Price_Clean']=new_price_clean
+new_price_clean = df1['New_Price'].copy()
+new_price_clean = new_price_clean.str.replace(' Lakh', '', regex=False)
+new_price_clean = new_price_clean.str.replace(' Cr', '', regex=False)
+new_price_clean = pd.to_numeric(new_price_clean, errors='coerce')
 
-print("\n========== CLEANED NEW PRICE ==========")
+new_price_clean[df1['New_Price'].str.contains('Cr', na=False)] *= 100
+
+df1['New_Price_Clean'] = new_price_clean
+
+print("\nCleaned New Price:")
 print(df1[['New_Price', 'New_Price_Clean']].dropna(subset=['New_Price']).head(20))
-print("\nData type:")
+
 print(df1['New_Price_Clean'].dtype)
-print("\nMissing values:")
 print(df1['New_Price_Clean'].isnull().sum())
 
-print("\n========== CRORE CONVERSION CHECK ==========")
+print("\nCrore conversion:")
 print(df1[df1['New_Price'].str.contains('Cr', na=False)][['Name', 'New_Price', 'New_Price_Clean']])
 
-print("\n========== NEW PRICE MISSINGNESS BY YEAR ==========")
-print(df1.groupby('Year')['New_Price'].apply(lambda x: x.isnull().sum()))
-
-print("\n========== NEW PRICE AVAILABILITY BY YEAR ==========")
-
 new_price_year = df1.groupby('Year')['New_Price'].agg(Total_Cars='size',Available='count')
-new_price_year['Missing'] = (new_price_year['Total_Cars'] -new_price_year['Available'])
+
+new_price_year['Missing'] = (new_price_year['Total_Cars'] - new_price_year['Available'])
+
 new_price_year['Available_Percent'] = (new_price_year['Available'] /new_price_year['Total_Cars'] * 100)
+
+print("\nNew Price availability by year:")
 print(new_price_year)
+
+print("\nMileage units:")
+print(df1['Mileage'].dropna().str.extract(r'([a-zA-Z/]+)$')[0].value_counts())
+
+print(df1[df1['Mileage'].str.contains('km/kg', na=False)][['Name', 'Year', 'Fuel_Type', 'Mileage', 'Price']])
+
+mileage_clean = pd.to_numeric(df1['Mileage'].str.extract(r'([\d.]+)')[0],errors='coerce')
+
+mileage_clean[df1['Mileage'].str.contains('km/kg', na=False)] = pd.NA
+
+df1['Mileage_Clean'] = mileage_clean
+
+print("\nCleaned Mileage:")
+print(df1[['Mileage', 'Mileage_Clean']].head(20))
+print(df1['Mileage_Clean'].dtype)
+print(df1['Mileage_Clean'].isna().sum())
+
