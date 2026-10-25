@@ -4,11 +4,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import warnings
 from scipy.stats import mannwhitneyu
+from pathlib import Path
 
 warnings.filterwarnings('ignore')
 
 df1 = pd.read_csv('train.csv')
 df2 = pd.read_csv('Car Sell Dataset.csv')
+
+graph_folder = Path('graphs')
+graph_folder.mkdir(exist_ok=True)
 
 pd.set_option('display.max_columns', None)
 
@@ -77,13 +81,13 @@ print("\nEngine:")
 print(df1['Engine'].dropna().head(10).to_list())
 print(df1['Engine'].dropna().str.extract(r'([A-Za-z]+)', expand=False).value_counts())
 
-engine_numeric = pd.to_numeric(df1['Engine'].str.replace('CC', '', regex=False),errors='coerce')
+engine_numeric = pd.to_numeric(df1['Engine'].str.replace('CC', '', regex=False), errors='coerce')
 
 print(engine_numeric.describe())
 
 print(df1.assign(Engine_Numeric=engine_numeric)[['Name', 'Year', 'Engine', 'Engine_Numeric']].sort_values('Engine_Numeric', ascending=False).head(10))
 
-df1['Engine_Clean'] = pd.to_numeric(df1['Engine'].str.replace(' CC', '', regex=False),errors='coerce')
+df1['Engine_Clean'] = pd.to_numeric(df1['Engine'].str.replace(' CC', '', regex=False), errors='coerce')
 
 print(df1[['Engine', 'Engine_Clean']].head(10))
 print(df1['Engine_Clean'].dtype)
@@ -92,13 +96,13 @@ print(df1['Engine_Clean'].isnull().sum())
 print("\nPower:")
 print(df1['Power'].dropna().str.extract(r'([A-Za-z]+)', expand=False).value_counts())
 
-power_numeric = pd.to_numeric(df1['Power'].str.replace('bhp', '', regex=False),errors='coerce')
+power_numeric = pd.to_numeric(df1['Power'].str.replace('bhp', '', regex=False), errors='coerce')
 
 print(power_numeric.describe())
 
 print(df1.assign(Power_Numeric=power_numeric)[['Name', 'Year', 'Power', 'Power_Numeric']].sort_values('Power_Numeric', ascending=False).head(10))
 
-df1['Power_Clean'] = pd.to_numeric(df1['Power'].str.replace('bhp', '', regex=False),errors='coerce')
+df1['Power_Clean'] = pd.to_numeric(df1['Power'].str.replace('bhp', '', regex=False), errors='coerce')
 
 print(df1[['Power', 'Power_Clean']].head(10))
 print(df1['Power_Clean'].dtype)
@@ -109,9 +113,9 @@ print(df1['New_Price'].dropna().str.extract(r'([A-Za-z]+)', expand=False).value_
 
 print(df1[df1['New_Price'].str.contains('Cr', na=False)][['Name', 'Year', 'New_Price', 'Price']])
 
-lakh = pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Lakh', na=False),'New_Price'].str.replace(' Lakh', '', regex=False),errors='coerce')
+lakh = pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Lakh', na=False), 'New_Price'].str.replace(' Lakh', '', regex=False), errors='coerce')
 
-crore = pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Cr', na=False),'New_Price'].str.replace(' Cr', '', regex=False),errors='coerce')
+crore = pd.to_numeric(df1.loc[df1['New_Price'].str.contains('Cr', na=False), 'New_Price'].str.replace(' Cr', '', regex=False), errors='coerce')
 
 print("\nLakh:")
 print(lakh.describe())
@@ -140,11 +144,11 @@ print(df1['New_Price_Clean'].isnull().sum())
 print("\nCrore conversion:")
 print(df1[df1['New_Price'].str.contains('Cr', na=False)][['Name', 'New_Price', 'New_Price_Clean']])
 
-new_price_year = df1.groupby('Year')['New_Price'].agg(Total_Cars='size',Available='count')
+new_price_year = df1.groupby('Year')['New_Price'].agg(Total_Cars='size', Available='count')
 
-new_price_year['Missing'] = (new_price_year['Total_Cars'] - new_price_year['Available'])
+new_price_year['Missing'] = new_price_year['Total_Cars'] - new_price_year['Available']
 
-new_price_year['Available_Percent'] = (new_price_year['Available'] /new_price_year['Total_Cars'] * 100)
+new_price_year['Available_Percent'] = new_price_year['Available'] / new_price_year['Total_Cars'] * 100
 
 print("\nNew Price availability by year:")
 print(new_price_year)
@@ -154,9 +158,9 @@ print(df1['Mileage'].dropna().str.extract(r'([a-zA-Z/]+)$')[0].value_counts())
 
 print(df1[df1['Mileage'].str.contains('km/kg', na=False)][['Name', 'Year', 'Fuel_Type', 'Mileage', 'Price']])
 
-mileage_clean = pd.to_numeric(df1['Mileage'].str.extract(r'([\d.]+)')[0],errors='coerce')
+mileage_clean = pd.to_numeric(df1['Mileage'].str.extract(r'([\d.]+)')[0], errors='coerce')
 
-mileage_clean[df1['Mileage'].str.contains('km/kg', na=False)] = pd.NA
+mileage_clean[df1['Mileage'].str.contains('km/kg', na=False)] = np.nan
 
 df1['Mileage_Clean'] = mileage_clean
 
@@ -178,7 +182,7 @@ df1['Model'] = df1['Name'].str.split().str[1]
 df1['Km_Per_Year'] = df1['Kilometers_Driven'] / (df1['Car_Age'] + 1)
 
 print("\nFeature extraction:")
-print(df1[['Name', 'Brand', 'Model', 'Year', 'Car_Age','Kilometers_Driven', 'Km_Per_Year','Engine_Clean', 'Power_Clean','Mileage_Clean']].head(10))
+print(df1[['Name', 'Brand', 'Model', 'Year', 'Car_Age', 'Kilometers_Driven', 'Km_Per_Year', 'Engine_Clean', 'Power_Clean', 'Mileage_Clean']].head(10))
 
 print("\nBrands:")
 print(df1['Brand'].nunique())
@@ -196,24 +200,24 @@ sns.histplot(df1['Price'], bins=40, kde=True)
 plt.title('Distribution of Used Car Prices')
 plt.xlabel('Price (Lakh)')
 plt.ylabel('Number of Cars')
+plt.savefig(graph_folder / '01_price_distribution.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.scatterplot(data=df1, x='Car_Age', y='Price', alpha=0.5)
 plt.title('Price vs Car Age')
 plt.xlabel('Car Age')
 plt.ylabel('Price (Lakh)')
+plt.savefig(graph_folder / '02_price_vs_car_age.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.scatterplot(data=df1, x='Kilometers_Driven', y='Price', alpha=0.5)
 plt.title('Price vs Kilometers Driven')
 plt.xlabel('Kilometers Driven')
 plt.ylabel('Price (Lakh)')
+plt.savefig(graph_folder / '03_price_vs_kilometers.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 brand_price = df1.groupby('Brand')['Price'].median().sort_values(ascending=False)
 
@@ -222,8 +226,8 @@ sns.barplot(x=brand_price.values, y=brand_price.index)
 plt.title('Median Price by Brand')
 plt.xlabel('Median Price (Lakh)')
 plt.ylabel('Brand')
+plt.savefig(graph_folder / '04_median_price_by_brand.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 fuel_price = df1.groupby('Fuel_Type')['Price'].median().sort_values(ascending=False)
 
@@ -232,8 +236,8 @@ sns.barplot(x=fuel_price.index, y=fuel_price.values)
 plt.title('Median Price by Fuel Type')
 plt.xlabel('Fuel Type')
 plt.ylabel('Median Price (Lakh)')
+plt.savefig(graph_folder / '05_median_price_by_fuel.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 transmission_price = df1.groupby('Transmission')['Price'].median()
 
@@ -242,8 +246,8 @@ sns.barplot(x=transmission_price.index, y=transmission_price.values)
 plt.title('Median Price by Transmission')
 plt.xlabel('Transmission')
 plt.ylabel('Median Price (Lakh)')
+plt.savefig(graph_folder / '06_median_price_by_transmission.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 owner_price = df1.groupby('Owner_Type')['Price'].median()
 
@@ -252,8 +256,8 @@ sns.barplot(x=owner_price.index, y=owner_price.values)
 plt.title('Median Price by Owner Type')
 plt.xlabel('Owner Type')
 plt.ylabel('Median Price (Lakh)')
+plt.savefig(graph_folder / '07_median_price_by_owner.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 location_price = df1.groupby('Location')['Price'].median().sort_values(ascending=False)
 
@@ -262,32 +266,32 @@ sns.barplot(x=location_price.values, y=location_price.index)
 plt.title('Median Price by Location')
 plt.xlabel('Median Price (Lakh)')
 plt.ylabel('Location')
+plt.savefig(graph_folder / '08_median_price_by_location.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.scatterplot(data=df1, x='Mileage_Clean', y='Price', alpha=0.5)
 plt.title('Price vs Mileage')
 plt.xlabel('Mileage')
 plt.ylabel('Price (Lakh)')
+plt.savefig(graph_folder / '09_price_vs_mileage.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.scatterplot(data=df1, x='Power_Clean', y='Price', alpha=0.5)
 plt.title('Price vs Power')
 plt.xlabel('Power (bhp)')
 plt.ylabel('Price (Lakh)')
+plt.savefig(graph_folder / '10_price_vs_power.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.scatterplot(data=df1, x='Engine_Clean', y='Price', alpha=0.5)
 plt.title('Price vs Engine Size')
 plt.xlabel('Engine (CC)')
 plt.ylabel('Price (Lakh)')
+plt.savefig(graph_folder / '11_price_vs_engine.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 year_price = df1.groupby('Year')['Price'].median()
 
@@ -296,6 +300,7 @@ sns.lineplot(x=year_price.index, y=year_price.values, marker='o')
 plt.title('Median Price by Year')
 plt.xlabel('Year')
 plt.ylabel('Median Price (Lakh)')
+plt.savefig(graph_folder / '12_median_price_by_year.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 print("\nPrice statistics:")
@@ -317,7 +322,7 @@ print("\nPower statistics:")
 print(df1['Power_Clean'].describe())
 
 print("\nCorrelation with Price:")
-print(df1[['Price', 'Car_Age', 'Kilometers_Driven','Mileage_Clean', 'Engine_Clean','Power_Clean']].corr()['Price'].sort_values(ascending=False))
+print(df1[['Price', 'Car_Age', 'Kilometers_Driven', 'Mileage_Clean', 'Engine_Clean', 'Power_Clean']].corr()['Price'].sort_values(ascending=False))
 
 print("\nOutlier analysis")
 
@@ -344,43 +349,43 @@ for col in columns:
     print("Upper limit:", upper)
     print("Number of outliers:", len(outliers))
 
-
 plt.figure(figsize=(8, 5))
 sns.boxplot(y=df1['Price'])
 plt.title('Price Outliers')
 plt.ylabel('Price (Lakh)')
+plt.savefig(graph_folder / '13_price_outliers.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.boxplot(y=df1['Kilometers_Driven'])
 plt.title('Kilometers Driven Outliers')
 plt.ylabel('Kilometers Driven')
+plt.savefig(graph_folder / '14_kilometers_outliers.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.boxplot(y=df1['Engine_Clean'])
 plt.title('Engine Outliers')
 plt.ylabel('Engine (CC)')
+plt.savefig(graph_folder / '15_engine_outliers.png', dpi=150, bbox_inches='tight')
 plt.show()
-
 
 plt.figure(figsize=(8, 5))
 sns.boxplot(y=df1['Power_Clean'])
 plt.title('Power Outliers')
 plt.ylabel('Power (bhp)')
+plt.savefig(graph_folder / '16_power_outliers.png', dpi=150, bbox_inches='tight')
 plt.show()
 
 print("\nTransmission price comparison")
 
-automatic = df1[df1['Transmission'] == 'Automatic']['Price']
-manual = df1[df1['Transmission'] == 'Manual']['Price']
+automatic = df1[df1['Transmission'] == 'Automatic']['Price'].dropna()
+manual = df1[df1['Transmission'] == 'Manual']['Price'].dropna()
 
 print("Automatic median:", automatic.median())
 print("Manual median:", manual.median())
 
-stat, p_value = mannwhitneyu(automatic,manual,alternative='two-sided')
+stat, p_value = mannwhitneyu(automatic, manual, alternative='two-sided')
 
 print("U statistic:", stat)
 print("p-value:", p_value)
@@ -390,3 +395,5 @@ if p_value < 0.05:
 else:
     print("The difference is not statistically significant.")
 
+print("\nAll graphs saved in:", graph_folder.resolve())
+print("Total graphs saved: 16")
